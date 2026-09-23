@@ -5,6 +5,10 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '10'))
     }
 
+environment {
+        PATH = "/usr/local/bin:/opt/homebrew/bin:$PATH"
+    }
+
     stages {
         stage('Checkout') {
             steps {
