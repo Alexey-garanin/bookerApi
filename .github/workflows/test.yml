@@ -1,0 +1,24 @@
+name: API Tests CI
+
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and run tests in Docker
+        run: |
+          echo "Docker creates an image based on the Dockerfile."
+          docker build -t booker-api-tests .
+          
+          echo "Running tests inside a Docker container."
+          docker run --rm booker-api-tests
