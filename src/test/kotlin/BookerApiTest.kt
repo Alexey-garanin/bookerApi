@@ -1,4 +1,3 @@
-import org.example.api.booker.BookerRestService
 import org.example.steps.BookerApiSteps
 import kotlin.test.Test
 
@@ -11,6 +10,16 @@ class BookerApiTest {
     @Test
     fun testHealthCheck(){
         apiSteps.checkPingHealthCheck()
+    }
+
+    @Test
+    fun testCreateBook(){
+        val bookingInstance = apiSteps.getBookingInstance()
+        val response = apiSteps.createBooking(bookingInstance)
+
+        val booking = apiSteps.getBookingById(response.bookingid)
+
+        apiSteps.compareBooking(bookingInstance, booking)
     }
 
 }
