@@ -3,7 +3,6 @@ name: API Tests CI
 on:
   push:
     branches: [ "main" ]
-
   pull_request:
     branches: [ "main" ]
 
@@ -20,10 +19,10 @@ jobs:
           echo "Docker creates an image based on the Dockerfile."
           docker build -t booker-api-tests .
           
-          echo "Running tests inside a Docker container.!"
+          echo "Running tests inside a Docker container."
           docker run --rm \
-          -v ${{ github.workspace }}/allure-results:/app/build/allure-results \
-          booker-api-tests ./gradlew test
+            -v ${{ github.workspace }}/allure-results:/app/build/allure-results \
+            booker-api-tests ./gradlew test
 
       - name: Download Allure CLI
         run: |
@@ -44,3 +43,12 @@ jobs:
           name: allure-report-html
           path: allure-report
           retention-days: 7
+
+      - name: Deploy to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          destination_dir: allure-report
+          keep_files: false
