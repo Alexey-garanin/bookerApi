@@ -5,11 +5,13 @@ import org.example.dataprovider.booker.BookerDataProvider
 import org.example.dto.request.BookingRequest
 import org.example.dto.response.BookingResponse
 import org.assertj.core.api.Assertions.assertThat
+import io.qameta.allure.Step
 
 class BookerApiSteps {
 
     val bookerService = BookerRestService()
 
+    @Step("API functionality check (server ping)")
     fun checkPingHealthCheck(){
         bookerService.pingBooking()
     }
