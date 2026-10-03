@@ -2,9 +2,8 @@ name: API Tests CI
 
 on:
   push:
-    branches:
-      - "main"
-      - "feature/**"
+    branches: [ "main" ]
+
   pull_request:
     branches: [ "main" ]
 
@@ -21,10 +20,10 @@ jobs:
           echo "Docker creates an image based on the Dockerfile."
           docker build -t booker-api-tests .
           
-          echo "Running tests inside a Docker container."
+          echo "Running tests inside a Docker container.!"
           docker run --rm \
-            -v ${{ github.workspace }}/allure-results:/app/build/allure-results \
-            booker-api-tests
+          -v ${{ github.workspace }}/allure-results:/app/build/allure-results \
+          booker-api-tests ./gradlew test
 
       - name: Download Allure CLI
         run: |
