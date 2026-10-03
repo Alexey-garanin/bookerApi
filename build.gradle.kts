@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.0"
+    id("io.qameta.allure") version "3.0.1"
 }
 
 group = "org.example"
@@ -9,39 +10,35 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation(kotlin("test"))
+sourceSets {
+    main {
+        kotlin.srcDir("src/main/kotlin")
+    }
+}
 
-    // REST Assured — нужен в main И в test
+dependencies {
+    // REST Assured
     implementation("io.rest-assured:rest-assured:5.5.0")
     implementation("io.rest-assured:kotlin-extensions:5.5.0")
-    testImplementation("io.rest-assured:rest-assured:5.5.0")
 
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    // JUnit 5
+    implementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    implementation(kotlin("test"))
 
-    // Поддержка LocalDate, LocalDateTime и др.
+    // Allure
+    implementation("io.qameta.allure:allure-junit5:2.25.0")
+    implementation("io.qameta.allure:allure-rest-assured:2.25.0")
+
+    // Logs
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.2")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2")
-
     implementation("org.assertj:assertj-core:3.27.7")
-
-    // Логирование
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("ch.qos.logback:logback-classic:1.4.14")
-
-    // Jackson для маппинга JSON
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.1")
-
-    // Основные библиотеки JUnit 5
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.2")
-
-    // Опционально: для поддержки параметризованных тестов
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(25)
 }
 
 tasks.test {

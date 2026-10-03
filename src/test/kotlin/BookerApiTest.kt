@@ -1,13 +1,29 @@
 import org.example.steps.BookerApiSteps
-import kotlin.test.Test
 
+import org.junit.jupiter.api.Test
+import io.qameta.allure.Epic
+import io.qameta.allure.Feature
+import io.qameta.allure.restassured.AllureRestAssured
+import io.restassured.RestAssured
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+
+@Epic("Restful-Booker")
+@Feature("API Tests")
 class BookerApiTest {
 
     val apiSteps = BookerApiSteps()
 
-
+    companion object {
+        @JvmStatic
+        @BeforeAll
+        fun setupAllureFilters() {
+            RestAssured.filters(AllureRestAssured())
+        }
+    }
 
     @Test
+    @DisplayName("Service availability check (Health Check)")
     fun testHealthCheck(){
         apiSteps.checkPingHealthCheck()
     }

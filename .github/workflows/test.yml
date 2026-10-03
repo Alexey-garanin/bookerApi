@@ -1,5 +1,9 @@
 name: API Tests CI
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 on:
   push:
@@ -21,4 +25,35 @@ jobs:
           docker build -t booker-api-tests .
           
           echo "Running tests inside a Docker container."
-          docker run --rm booker-api-tests
+          docker run --rm \
+            -v ${{ github.workspace }}/allure-results:/app/build/allure-results \
+            booker-api-tests ./gradlew test
+
+      - name: Download Allure CLI
+        run: |
+          echo "Download Allure CLI"
+          curl -o allure.tgz -Ls https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.24.0/allure-commandline-2.24.0.tgz
+          tar -zxvf allure.tgz
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          echo "Generate Allure Report"
+          ./allure-2.24.0/bin/allure generate allure-results -o allure-report --clean
+
+      - name: Upload Allure Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-html
+          path: allure-report
+          retention-days: 7
+
+      - name: Deploy to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          #destination_dir: allure-report
+          keep_files: false
