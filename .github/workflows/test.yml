@@ -2,7 +2,9 @@ name: API Tests CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
+      - "feature/**"
   pull_request:
     branches: [ "main" ]
 
@@ -24,13 +26,17 @@ jobs:
             -v ${{ github.workspace }}/allure-results:/app/build/allure-results \
             booker-api-tests
 
+      - name: Download Allure CLI
+        run: |
+          echo "Download Allure CLI"
+          curl -o allure.tgz -Ls https://repo1.maven.org/maven2/io/qameta/allure/allure-commandline/2.24.0/allure-commandline-2.24.0.tgz
+          tar -zxvf allure.tgz
+
       - name: Generate Allure Report
         if: always()
-        uses: simple-elf/allure-report-action@v1.8
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          gh_pages: gh-pages
+        run: |
+          echo "Generate Allure Report"
+          ./allure-2.24.0/bin/allure generate allure-results -o allure-report --clean
 
       - name: Upload Allure Report Artifact
         if: always()
