@@ -4,23 +4,23 @@
 <div>
     <pre class="preformated-text">
 {
-    &quot;firstname&quot;: &quot;James&quot;,
-    &quot;lastname&quot;: &quot;Hill&quot;,
-    &quot;totalprice&quot;: 5600,
+    &quot;firstname&quot;: &quot;Michael&quot;,
+    &quot;lastname&quot;: &quot;Brown&quot;,
+    &quot;totalprice&quot;: 7000,
     &quot;depositpaid&quot;: false,
     &quot;bookingdates&quot;: {
         &quot;checkin&quot;: [
             2026,
             10,
-            3
+            6
         ],
         &quot;checkout&quot;: [
             2026,
             10,
-            8
+            11
         ]
     },
-    &quot;additionalneeds&quot;: &quot;Kid-friendly utensils&quot;
+    &quot;additionalneeds&quot;: &quot;Early check-in&quot;
 }    </pre>
 </div>
 
@@ -35,22 +35,22 @@
 <h4>Curl</h4>
 <div>
 curl -v -X POST &#39;https://restful-booker.herokuapp.com/booking&#39; -H &#39;Accept: */*&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
-    &quot;firstname&quot;: &quot;James&quot;,
-    &quot;lastname&quot;: &quot;Hill&quot;,
-    &quot;totalprice&quot;: 5600,
+    &quot;firstname&quot;: &quot;Michael&quot;,
+    &quot;lastname&quot;: &quot;Brown&quot;,
+    &quot;totalprice&quot;: 7000,
     &quot;depositpaid&quot;: false,
     &quot;bookingdates&quot;: {
         &quot;checkin&quot;: [
             2026,
             10,
-            3
+            6
         ],
         &quot;checkout&quot;: [
             2026,
             10,
-            8
+            11
         ]
     },
-    &quot;additionalneeds&quot;: &quot;Kid-friendly utensils&quot;
+    &quot;additionalneeds&quot;: &quot;Early check-in&quot;
 }&#39;
 </div>
