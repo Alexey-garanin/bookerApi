@@ -1,5 +1,6 @@
 package org.example.dataprovider.booker
 
+import org.example.dto.request.AuthRequest
 import org.example.dto.request.BookingDates
 import org.example.dto.request.BookingRequest
 import java.time.LocalDate
@@ -13,7 +14,8 @@ object BookerDataProvider {
         listOf("Smith", "Williams", "Brown", "Young", "Harris", "Anderson", "Martinez", "Scott", "Hill", "Gonzalez")
     private val LIST_ADDITIONALNEEDS =
         listOf("Breakfast", "Animal service", "Early check-in", "Late check-out", "Kid-friendly utensils", "Specific balcony view", null)
-
+    private val username = "admin"
+    private val password = "password123"
 
     fun createBookingInstance(): BookingRequest {
         val checkin = LocalDate.now()
@@ -29,6 +31,13 @@ object BookerDataProvider {
             ),
         additionalneeds = LIST_ADDITIONALNEEDS.random(),
     )
+    }
+
+    fun createAuthRequest(): AuthRequest {
+        return AuthRequest(
+            username = username,
+            password = password
+        )
     }
 
 }

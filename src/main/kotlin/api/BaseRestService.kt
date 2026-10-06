@@ -50,6 +50,10 @@ class RequestExecutor(private val spec: RequestSpecification) {
         spec.header(name, value)
     }
 
+    fun cookie(name: String, value: String) {
+        spec.cookie(name, value)
+    }
+
     fun execute(): Response {
         logger.info("→ REQUEST: {} {}", method, path)
         spec.log().all()
