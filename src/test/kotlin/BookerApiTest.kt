@@ -29,13 +29,15 @@ class BookerApiTest {
     }
 
     @Test
+    @DisplayName("Create booking")
     fun testCreateBook(){
         val bookingInstance = apiSteps.getBookingInstance()
         val response = apiSteps.createBooking(bookingInstance)
-
         val booking = apiSteps.getBookingById(response.bookingid)
-
         apiSteps.compareBooking(bookingInstance, booking)
+        apiSteps.getToken()
+        apiSteps.deleteBooking(response.bookingid)
     }
+
 
 }
