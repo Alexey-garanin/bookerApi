@@ -41,6 +41,6 @@ class BookerRestService: BaseRestService() {
         path(GET_BOOKING)
         pathParam("id", id)
         cookie("token", token)
-    }. execute()
+    }. execute{ it }
 
 }
