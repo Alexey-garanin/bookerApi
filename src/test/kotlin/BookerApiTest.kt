@@ -12,9 +12,9 @@ import org.junit.jupiter.api.DisplayName
 @Feature("API Tests")
 class BookerApiTest {
 
-    val apiSteps = BookerApiSteps()
-
     companion object {
+        private val apiSteps = BookerApiSteps()
+
         @JvmStatic
         @BeforeAll
         fun setupAllureFilters() {
@@ -29,8 +29,33 @@ class BookerApiTest {
     }
 
     @Test
+    @DisplayName("Successful authorization returns valid access token")
+    fun successfulLoginReturnsToken(){
+        apiSteps.getToken()
+    }
+
+    @Test
+    @DisplayName("Delete booking")
+    fun deleteBooking() {
+        val bookingInstance = apiSteps.getBookingInstance()
+        val booking = apiSteps.createBooking(bookingInstance)
+        apiSteps.getToken()
+        apiSteps.deleteBooking(booking.bookingid)
+        apiSteps.verifyBooking(booking.bookingid)
+    }
+
+    @Test
     @DisplayName("Create booking")
     fun testCreateBook(){
+        val bookingInstance = apiSteps.getBookingInstance()
+        val response = apiSteps.createBooking(bookingInstance)
+        apiSteps.getToken()
+        apiSteps.deleteBooking(response.bookingid)
+    }
+
+    @Test
+    @DisplayName("Get booking by id")
+    fun testGetBookingByID(){
         val bookingInstance = apiSteps.getBookingInstance()
         val response = apiSteps.createBooking(bookingInstance)
         val booking = apiSteps.getBookingById(response.bookingid)
@@ -38,6 +63,5 @@ class BookerApiTest {
         apiSteps.getToken()
         apiSteps.deleteBooking(response.bookingid)
     }
-
 
 }

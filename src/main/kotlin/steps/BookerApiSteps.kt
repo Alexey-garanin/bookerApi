@@ -6,9 +6,11 @@ import org.example.dto.request.BookingRequest
 import org.example.dto.response.BookingResponse
 import org.assertj.core.api.Assertions.assertThat
 import io.qameta.allure.Step
+import org.example.assertions.expectStatus
+import org.example.assertions.expectStatusAndParse
 import org.example.dto.response.AuthResponse
 
-class BookerApiSteps: BaseApiSteps() {
+class BookerApiSteps {
 
     val bookerService = BookerRestService()
     private var currentToken: String? = null
@@ -48,10 +50,14 @@ class BookerApiSteps: BaseApiSteps() {
         bookerService.deleteBooking(id, token).expectStatus(201, "Delete booking")
     }
 
-
     @Step("Get booking by id")
     fun getBookingById(id: Long): BookingRequest {
         return bookerService.getBookingById(id).expectStatusAndParse(200, "Get booking")
+    }
+
+    @Step("Try to get booking {id}")
+    fun verifyBooking(id: Long){
+        bookerService.getBookingById(id).expectStatus(404, "Verify booking is not found")
     }
 
     @Step("Compare booking data")
@@ -60,6 +66,4 @@ class BookerApiSteps: BaseApiSteps() {
            .describedAs("The booking body in the response does not match the request.")
            .isEqualTo(instance)
     }
-
-
 }
