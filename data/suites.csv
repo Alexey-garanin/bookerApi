@@ -1,3 +1,6 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Tue Oct 06 18:29:29 UTC 2026","Tue Oct 06 18:29:34 UTC 2026","4124","","BookerApiTest","","BookerApiTest","testCreateBook","Create booking",""
-"passed","Tue Oct 06 18:29:34 UTC 2026","Tue Oct 06 18:29:34 UTC 2026","193","","BookerApiTest","","BookerApiTest","testHealthCheck","Service availability check (Health Check)",""
+"passed","Thu Oct 08 14:26:49 UTC 2026","Thu Oct 08 14:26:49 UTC 2026","260","","BookerApiTest","","BookerApiTest","testCreateBook","Create booking",""
+"passed","Thu Oct 08 14:26:49 UTC 2026","Thu Oct 08 14:26:49 UTC 2026","119","","BookerApiTest","","BookerApiTest","testHealthCheck","Service availability check (Health Check)",""
+"passed","Thu Oct 08 14:26:45 UTC 2026","Thu Oct 08 14:26:49 UTC 2026","3709","","BookerApiTest","","BookerApiTest","testGetBookingByID","Get booking by id",""
+"passed","Thu Oct 08 14:26:49 UTC 2026","Thu Oct 08 14:26:49 UTC 2026","1","","BookerApiTest","","BookerApiTest","successfulLoginReturnsToken","Successful authorization returns valid access token",""
+"passed","Thu Oct 08 14:26:49 UTC 2026","Thu Oct 08 14:26:49 UTC 2026","371","","BookerApiTest","","BookerApiTest","deleteBooking","Delete booking",""
