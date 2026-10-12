@@ -3,11 +3,12 @@ package org.example.api.booker
 import io.restassured.http.Method
 import org.example.api.BaseRestService
 import org.example.dto.request.AuthRequest
+import org.example.dto.request.BookingPatchRequest
 import org.example.dto.request.BookingRequest
 
 class BookerRestService: BaseRestService() {
     companion object {
-        const val GET_BOOKING = "/booking/{id}"
+        const val BOOKING_ID = "/booking/{id}"
         const val PING = "/ping"
         const val CREATE_BOOKING = "/booking"
         const val AUTH = "/auth"
@@ -15,7 +16,7 @@ class BookerRestService: BaseRestService() {
 
     fun getBookingById(id: Long) = request {
         method(Method.GET)
-        path(GET_BOOKING)
+        path(BOOKING_ID)
         pathParam("id", id)
     }.execute { it }
 
@@ -38,9 +39,25 @@ class BookerRestService: BaseRestService() {
 
     fun deleteBooking(id: Long, token: String) = request {
         method(Method.DELETE)
-        path(GET_BOOKING)
+        path(BOOKING_ID)
         pathParam("id", id)
         cookie("token", token)
     }. execute{ it }
+
+    fun updateBooking(id: Long, request: BookingRequest, token: String) = request {
+        method(Method.PUT)
+        path(BOOKING_ID)
+        pathParam("id", id)
+        cookie("token", token)
+        body(request)
+    }.execute { it }
+
+    fun patchBooking(id: Long, request: BookingPatchRequest, token: String) = request {
+        method(Method.PATCH)
+        path(BOOKING_ID)
+        pathParam("id", id)
+        cookie("token", token)
+        body(request)
+    }. execute { it }
 
 }

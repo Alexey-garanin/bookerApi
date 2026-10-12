@@ -2,6 +2,7 @@ package org.example.dataprovider.booker
 
 import org.example.dto.request.AuthRequest
 import org.example.dto.request.BookingDates
+import org.example.dto.request.BookingPatchRequest
 import org.example.dto.request.BookingRequest
 import java.time.LocalDate
 import kotlin.random.Random
@@ -14,6 +15,11 @@ object BookerDataProvider {
         listOf("Smith", "Williams", "Brown", "Young", "Harris", "Anderson", "Martinez", "Scott", "Hill", "Gonzalez")
     private val LIST_ADDITIONALNEEDS =
         listOf("Breakfast", "Animal service", "Early check-in", "Late check-out", "Kid-friendly utensils", "Specific balcony view", null)
+
+    val PATCH_IGNORE_FIELDS = arrayOf(
+        "totalprice", "depositpaid", "bookingdates", "additionalneeds"
+    )
+
     private val username = "admin"
     private val password = "password123"
 
@@ -37,6 +43,13 @@ object BookerDataProvider {
         return AuthRequest(
             username = username,
             password = password
+        )
+    }
+
+    fun createPatchRequest(): BookingPatchRequest {
+        return BookingPatchRequest(
+            firstname = LIST_FIRSTNAME.random(),
+            lastname = LIST_LASTNAME.random()
         )
     }
 
