@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import io.qameta.allure.Step
 import org.example.assertions.expectStatus
 import org.example.assertions.expectStatusAndParse
+import org.example.dto.request.BookingPatchRequest
 import org.example.dto.response.AuthResponse
 
 class BookerApiSteps {
@@ -17,6 +18,10 @@ class BookerApiSteps {
 
     fun getBookingInstance(): BookingRequest{
         return BookerDataProvider.createBookingInstance()
+    }
+
+    fun getPatchInstance(): BookingPatchRequest{
+        return BookerDataProvider.createPatchRequest()
     }
 
     @Step("Check API ping")
@@ -50,7 +55,23 @@ class BookerApiSteps {
         bookerService.deleteBooking(id, token).expectStatus(201, "Delete booking")
     }
 
-    @Step("Get booking by id")
+    @Step("Update booking {id}")
+    fun updateBooking(id: Long, request: BookingRequest): BookingRequest {
+        val token = requireNotNull(currentToken) {
+            "Token is not set"
+        }
+        return bookerService.updateBooking(id, request, token).expectStatusAndParse(200, "Update booking")
+    }
+
+    @Step("Patch booking {id}")
+    fun patchBooking(id: Long, request: BookingPatchRequest): BookingRequest {
+        val token = requireNotNull(currentToken) {
+            "Token is not set"
+        }
+        return bookerService.patchBooking(id, request, token).expectStatusAndParse(200, "Patch booking")
+    }
+
+    @Step("Get booking {id}")
     fun getBookingById(id: Long): BookingRequest {
         return bookerService.getBookingById(id).expectStatusAndParse(200, "Get booking")
     }
@@ -65,5 +86,36 @@ class BookerApiSteps {
         assertThat(response)
            .describedAs("The booking body in the response does not match the request.")
            .isEqualTo(instance)
+    }
+
+    @Step("Compare booking data (partial update)")
+    fun comparePatchedBooking(
+        original: BookingResponse,
+        patchRequest: BookingPatchRequest,
+        response: BookingRequest
+    ) {
+        patchRequest.firstname?.let {
+            assertThat(response.firstname)
+                .describedAs("Firstname was not updated")
+                .isEqualTo(it)
+        }
+        patchRequest.lastname?.let {
+            assertThat(response.lastname)
+                .describedAs("Lastname was not updated")
+                .isEqualTo(it)
+        }
+
+        assertThat(response.totalprice)
+            .describedAs("Totalprice should not change after PATCH")
+            .isEqualTo(original.booking.totalprice)
+        assertThat(response.depositpaid)
+            .describedAs("Depositpaid should not change after PATCH")
+            .isEqualTo(original.booking.depositpaid)
+        assertThat(response.bookingdates)
+            .describedAs("Bookingdates should not change after PATCH")
+            .isEqualTo(original.booking.bookingdates)
+        assertThat(response.additionalneeds)
+            .describedAs("Additionalneeds should not change after PATCH")
+            .isEqualTo(original.booking.additionalneeds)
     }
 }

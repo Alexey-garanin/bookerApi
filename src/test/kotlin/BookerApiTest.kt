@@ -5,14 +5,16 @@ import io.qameta.allure.Epic
 import io.qameta.allure.Feature
 import io.qameta.allure.restassured.AllureRestAssured
 import io.restassured.RestAssured
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 
 @Epic("Restful-Booker")
 @Feature("API Tests")
 class BookerApiTest {
 
-    companion object {
+companion object {
         private val apiSteps = BookerApiSteps()
 
         @JvmStatic
@@ -20,6 +22,11 @@ class BookerApiTest {
         fun setupAllureFilters() {
             RestAssured.filters(AllureRestAssured())
         }
+    }
+
+    @BeforeEach
+    fun setup() {
+        apiSteps.getToken()
     }
 
     @Test
@@ -31,26 +38,27 @@ class BookerApiTest {
     @Test
     @DisplayName("Successful authorization returns valid access token")
     fun successfulLoginReturnsToken(){
-        apiSteps.getToken()
+        val token = apiSteps.getToken()
+        assertThat(token).isNotEmpty()
     }
 
     @Test
     @DisplayName("Delete booking")
     fun deleteBooking() {
-        val bookingInstance = apiSteps.getBookingInstance()
-        val booking = apiSteps.createBooking(bookingInstance)
-        apiSteps.getToken()
-        apiSteps.deleteBooking(booking.bookingid)
-        apiSteps.verifyBooking(booking.bookingid)
+        val response = apiSteps.createBooking(apiSteps.getBookingInstance())
+        apiSteps.deleteBooking(response.bookingid)
+        apiSteps.verifyBooking(response.bookingid)
     }
 
     @Test
     @DisplayName("Create booking")
-    fun testCreateBook(){
-        val bookingInstance = apiSteps.getBookingInstance()
-        val response = apiSteps.createBooking(bookingInstance)
-        apiSteps.getToken()
-        apiSteps.deleteBooking(response.bookingid)
+    fun testCreateBooking(){
+        val response = apiSteps.createBooking(apiSteps.getBookingInstance())
+        try {
+            assertThat(response.bookingid).isGreaterThan(0)
+        } finally {
+            runCatching { apiSteps.deleteBooking(response.bookingid) }
+        }
     }
 
     @Test
@@ -58,10 +66,39 @@ class BookerApiTest {
     fun testGetBookingByID(){
         val bookingInstance = apiSteps.getBookingInstance()
         val response = apiSteps.createBooking(bookingInstance)
-        val booking = apiSteps.getBookingById(response.bookingid)
-        apiSteps.compareBooking(bookingInstance, booking)
-        apiSteps.getToken()
-        apiSteps.deleteBooking(response.bookingid)
+        try {
+            val booking = apiSteps.getBookingById(response.bookingid)
+            apiSteps.compareBooking(bookingInstance, booking)
+        } finally {
+            runCatching { apiSteps.deleteBooking(response.bookingid) }
+        }
+    }
+
+    @Test
+    @DisplayName("Update booking successfully changes all fields")
+    fun updateBooking(){
+        val response = apiSteps.createBooking(apiSteps.getBookingInstance())
+        val updateBookingInstance = apiSteps.getBookingInstance()
+        try {
+            val booking = apiSteps.updateBooking(response.bookingid, updateBookingInstance)
+            apiSteps.compareBooking(updateBookingInstance, booking)
+        } finally {
+            runCatching { apiSteps.deleteBooking(response.bookingid) }
+        }
+    }
+
+    @Test
+    @DisplayName("Patch booking successfully")
+    fun patchBookingSuccessfully(){
+        val response = apiSteps.createBooking(apiSteps.getBookingInstance())
+        val patchBookingInstance = apiSteps.getPatchInstance()
+        try {
+            apiSteps.patchBooking(response.bookingid, patchBookingInstance)
+            val booking = apiSteps.getBookingById(response.bookingid)
+            apiSteps.comparePatchedBooking(response, patchBookingInstance,booking )
+        } finally {
+            runCatching { apiSteps.deleteBooking(response.bookingid) }
+        }
     }
 
 }

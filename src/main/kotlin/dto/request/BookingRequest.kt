@@ -14,3 +14,7 @@ data class BookingDates(
     val checkin: LocalDate,
     val checkout: LocalDate
 )
+data class BookingPatchRequest(
+    val firstname: String? = null,
+    val lastname: String? = null
+)
