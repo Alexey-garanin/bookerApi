@@ -8,8 +8,11 @@ import org.assertj.core.api.Assertions.assertThat
 import io.qameta.allure.Step
 import org.example.assertions.expectStatus
 import org.example.assertions.expectStatusAndParse
+import org.example.assertions.expectStatusAndParseList
 import org.example.dto.request.BookingPatchRequest
 import org.example.dto.response.AuthResponse
+import org.example.dto.response.BookingIdResponse
+import java.time.LocalDate
 
 class BookerApiSteps {
 
@@ -118,4 +121,19 @@ class BookerApiSteps {
             .describedAs("Additionalneeds should not change after PATCH")
             .isEqualTo(original.booking.additionalneeds)
     }
+
+    @Step("Get booking IDs")
+    fun getBookingIds(firstname: String? = null, lastname: String? = null, checkin: LocalDate? = null, checkout: LocalDate? = null): List<BookingIdResponse> {
+        return bookerService.getBookingIds(firstname, lastname, checkin, checkout)
+            .expectStatusAndParseList<List<BookingIdResponse>>(200, "Get booking IDs")
+    }
+
+    @Step("Verify booking {bookingId} exists in filtered list")
+    fun verifyBookingExistsInList(bookings: List<BookingIdResponse>, bookingId: Long){
+        assertThat(bookings).describedAs("Filtered list should contain booking with ID $bookingId")
+            .contains(BookingIdResponse(bookingId))
+    }
+
+
+
 }

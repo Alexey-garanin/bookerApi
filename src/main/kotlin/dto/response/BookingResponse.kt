@@ -6,3 +6,7 @@ data class BookingResponse(
     val bookingid: Long,
     val booking: BookingRequest
 )
+
+data class BookingIdResponse(
+    val bookingid: Long
+)

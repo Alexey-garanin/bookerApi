@@ -5,6 +5,7 @@ import org.example.api.BaseRestService
 import org.example.dto.request.AuthRequest
 import org.example.dto.request.BookingPatchRequest
 import org.example.dto.request.BookingRequest
+import java.time.LocalDate
 
 class BookerRestService: BaseRestService() {
     companion object {
@@ -13,6 +14,21 @@ class BookerRestService: BaseRestService() {
         const val CREATE_BOOKING = "/booking"
         const val AUTH = "/auth"
     }
+
+    fun getBookingIds(
+        firstname: String? = null,
+        lastname: String? = null,
+        checkin: LocalDate? = null,
+        checkout: LocalDate? = null,
+    ) = request {
+        method(Method.GET)
+        path("/booking")
+        if (firstname != null) queryParam("firstname", firstname)
+        if (lastname != null) queryParam("lastname", lastname)
+
+        if (checkin != null) queryParam("checkin", checkin.toString())
+        if (checkout != null) queryParam("checkout", checkout.toString())
+    }.execute { it }
 
     fun getBookingById(id: Long) = request {
         method(Method.GET)
