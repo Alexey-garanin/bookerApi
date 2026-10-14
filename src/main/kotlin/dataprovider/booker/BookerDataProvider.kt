@@ -16,9 +16,6 @@ object BookerDataProvider {
     private val LIST_ADDITIONALNEEDS =
         listOf("Breakfast", "Animal service", "Early check-in", "Late check-out", "Kid-friendly utensils", "Specific balcony view", null)
 
-    val PATCH_IGNORE_FIELDS = arrayOf(
-        "totalprice", "depositpaid", "bookingdates", "additionalneeds"
-    )
 
     private val username = "admin"
     private val password = "password123"

@@ -101,4 +101,23 @@ companion object {
         }
     }
 
+    @Test
+    @DisplayName("Get all bookings")
+    fun getAllBookingsIds(){
+        apiSteps.getBookingIds().isNotEmpty()
+    }
+
+    @Test
+    @DisplayName("Filter bookings by full name")
+    fun filterBookingByFullName(){
+        val bookingInstance = apiSteps.getBookingInstance()
+        val response = apiSteps.createBooking(bookingInstance)
+        try {
+        val filteredBookings = apiSteps.getBookingIds(bookingInstance.firstname, bookingInstance.lastname)
+        apiSteps.verifyBookingExistsInList(filteredBookings, response.bookingid)
+        } finally {
+            runCatching { apiSteps.deleteBooking(response.bookingid) }
+        }
+    }
+
 }

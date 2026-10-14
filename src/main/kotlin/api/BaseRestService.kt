@@ -54,6 +54,10 @@ class RequestExecutor(private val spec: RequestSpecification) {
         spec.cookie(name, value)
     }
 
+    fun queryParam(name: String, value: Any) {
+        spec.queryParam(name, value)
+    }
+
     fun execute(): Response {
         logger.info("→ REQUEST: {} {}", method, path)
         spec.log().all()
