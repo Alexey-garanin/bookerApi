@@ -50,7 +50,7 @@ class BookerApiSteps {
         return response.token
     }
 
-    @Step("Delete booking")
+    @Step("Delete booking {id}")
     fun deleteBooking(id: Long) {
         val token = requireNotNull(currentToken) {
             "Token is not set"
@@ -135,5 +135,12 @@ class BookerApiSteps {
     }
 
 
+    @Step("Try to get auth token with wrong credentials")
+    fun getWrongToken() {
+        val response = bookerService.authBooking(BookerDataProvider.createAuthRequest(password = "wrong_password"))
+        assertThat(response.jsonPath().getString("reason"))
+            .describedAs("Error message for wrong password")
+            .isEqualTo("Bad credentials")
+    }
 
 }

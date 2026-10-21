@@ -36,11 +36,11 @@ object BookerDataProvider {
     )
     }
 
-    fun createAuthRequest(): AuthRequest {
-        return AuthRequest(
-            username = username,
-            password = password
-        )
+    fun createAuthRequest(
+        username: String = "admin",
+        password: String = "password123"
+    ): AuthRequest {
+        return AuthRequest(username = username, password = password)
     }
 
     fun createPatchRequest(): BookingPatchRequest {
