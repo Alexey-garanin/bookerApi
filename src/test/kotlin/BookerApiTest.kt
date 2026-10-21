@@ -6,6 +6,7 @@ import io.qameta.allure.Feature
 import io.qameta.allure.restassured.AllureRestAssured
 import io.restassured.RestAssured
 import org.assertj.core.api.Assertions.assertThat
+import org.example.assertions.expectStatus
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -119,5 +120,50 @@ companion object {
             runCatching { apiSteps.deleteBooking(response.bookingid) }
         }
     }
+
+    @Test
+    @DisplayName("Authorization with wrong password returns 403 Forbidden")
+    fun authWithWrongPasswordReturns403() {
+        apiSteps.getWrongToken()
+    }
+
+    @Test
+    @DisplayName("DELETE invalid token returns 403")
+    fun deleteWithoutTokenReturns403() {
+        val booking = apiSteps.createBooking(apiSteps.getBookingInstance())
+        try {
+            apiSteps.bookerService.deleteBooking(booking.bookingid, "invalid_token")
+                .expectStatus(403, "Delete invalid token")
+        } finally {
+            runCatching { apiSteps.deleteBooking(booking.bookingid) }
+        }
+    }
+
+    @Test
+    @DisplayName("PUT invalid token returns 403")
+    fun updateWithoutTokenReturns403() {
+        val booking = apiSteps.createBooking(apiSteps.getBookingInstance())
+        try {
+            val updateRequest = apiSteps.getBookingInstance()
+            apiSteps.bookerService.updateBooking(booking.bookingid, updateRequest, "invalid_token")
+                .expectStatus(403, "Update invalid token")
+        } finally {
+            runCatching { apiSteps.deleteBooking(booking.bookingid) }
+        }
+    }
+
+    @Test
+    @DisplayName("PATCH invalid token returns 403")
+    fun patchWithoutTokenReturns403() {
+        val booking = apiSteps.createBooking(apiSteps.getBookingInstance())
+        try {
+            val patchRequest = apiSteps.getPatchInstance()
+            apiSteps.bookerService.patchBooking(booking.bookingid, patchRequest, "invalid_token")
+                .expectStatus(403, "Patch invalid token")
+        } finally {
+            runCatching { apiSteps.deleteBooking(booking.bookingid) }
+        }
+    }
+
 
 }
