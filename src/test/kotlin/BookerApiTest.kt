@@ -7,9 +7,13 @@ import io.qameta.allure.restassured.AllureRestAssured
 import io.restassured.RestAssured
 import org.assertj.core.api.Assertions.assertThat
 import org.example.assertions.expectStatus
+import org.example.dto.request.BookingPatchRequest
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
+
 
 @Epic("Restful-Booker")
 @Feature("API Tests")
@@ -22,12 +26,8 @@ companion object {
         @BeforeAll
         fun setupAllureFilters() {
             RestAssured.filters(AllureRestAssured())
+            apiSteps.getToken()
         }
-    }
-
-    @BeforeEach
-    fun setup() {
-        apiSteps.getToken()
     }
 
     @Test
@@ -90,7 +90,7 @@ companion object {
 
     @Test
     @DisplayName("Patch booking successfully")
-    fun patchBookingSuccessfully(){
+    fun fullPatchBookingSuccessfully(){
         val response = apiSteps.createBooking(apiSteps.getBookingInstance())
         val patchBookingInstance = apiSteps.getPatchInstance()
         try {
@@ -165,5 +165,45 @@ companion object {
         }
     }
 
+    @Test
+    @DisplayName("PUT Idempotence check")
+    fun putIdempotenceCheck(){
+        val response = apiSteps.createBooking(apiSteps.getBookingInstance())
+        val updateBookingInstance = apiSteps.getBookingInstance()
+        try {
+            apiSteps.updateBooking(response.bookingid, updateBookingInstance)
+            val booking = apiSteps.updateBooking(response.bookingid, updateBookingInstance)
+            apiSteps.compareBooking(updateBookingInstance, booking)
+        } finally {
+            runCatching { apiSteps.deleteBooking(response.bookingid) }
+        }
+    }
+
+    @Test
+    @DisplayName("Patch booking successfully")
+    fun partlyPatchBookingSuccessfully(){
+        val response = apiSteps.createBooking(apiSteps.getBookingInstance())
+        val patchBookingInstance = BookingPatchRequest(apiSteps.getPatchInstance().firstname)
+        try {
+            apiSteps.patchBooking(response.bookingid, patchBookingInstance)
+            val booking = apiSteps.getBookingById(response.bookingid)
+            apiSteps.comparePatchedBooking(response, patchBookingInstance,booking )
+        } finally {
+            runCatching { apiSteps.deleteBooking(response.bookingid) }
+        }
+    }
+
+    @Test
+    @DisplayName("Create booking with empty body returns error")
+    fun createWithEmptyBodyReturnsError() {
+        apiSteps.createInvalidEmptyBooking()
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["bookingdates", "firstname", "totalprice"])
+    @DisplayName("Create booking without required field '{0}' returns error")
+    fun createWithoutRequiredFieldReturnsError(fieldName: String) {
+        apiSteps.createBookingWithoutField(fieldName)
+    }
 
 }

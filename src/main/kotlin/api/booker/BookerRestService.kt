@@ -41,7 +41,7 @@ class BookerRestService: BaseRestService() {
         path(PING)
     }.execute { it }
 
-    fun createBooking(request: BookingRequest) = request {
+    fun createBooking(request: Any) = request {
         method(Method.POST)
         path(CREATE_BOOKING)
         body(request)
