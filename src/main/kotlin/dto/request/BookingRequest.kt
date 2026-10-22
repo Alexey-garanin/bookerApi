@@ -1,6 +1,6 @@
 package org.example.dto.request
 
-import java.time.LocalDate
+import com.fasterxml.jackson.annotation.JsonInclude
 
 data class BookingRequest(
     val firstname: String,
@@ -11,9 +11,10 @@ data class BookingRequest(
     val additionalneeds: String?,
 )
 data class BookingDates(
-    val checkin: LocalDate,
-    val checkout: LocalDate
+    val checkin: String,
+    val checkout: String
 )
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class BookingPatchRequest(
     val firstname: String? = null,
     val lastname: String? = null

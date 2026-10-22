@@ -6,6 +6,7 @@ import org.example.dto.request.BookingRequest
 import org.example.dto.response.BookingResponse
 import org.assertj.core.api.Assertions.assertThat
 import io.qameta.allure.Step
+import io.restassured.response.Response
 import org.example.assertions.expectStatus
 import org.example.assertions.expectStatusAndParse
 import org.example.assertions.expectStatusAndParseList
@@ -13,6 +14,7 @@ import org.example.dto.request.BookingPatchRequest
 import org.example.dto.response.AuthResponse
 import org.example.dto.response.BookingIdResponse
 import java.time.LocalDate
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 
 class BookerApiSteps {
 
@@ -143,4 +145,17 @@ class BookerApiSteps {
             .isEqualTo("Bad credentials")
     }
 
+    @Step("Create booking with invalid empty body")
+    fun createInvalidEmptyBooking(): Response {
+        return bookerService.createBooking("{}").expectStatus(500, "Create booking with empty body")
+    }
+
+    @Step("Create booking without field: {fieldName}")
+    fun createBookingWithoutField(fieldName: String): Response {
+        val objectMapper = jacksonObjectMapper()
+        val validInstance = getBookingInstance()
+        val bodyMap = objectMapper.convertValue(validInstance, MutableMap::class.java)
+        bodyMap.remove(fieldName)
+        return bookerService.createBooking(bodyMap).expectStatus(500, "Create booking with invalid body")
+    }
 }

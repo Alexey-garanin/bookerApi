@@ -29,8 +29,8 @@ object BookerDataProvider {
         totalprice = Random.nextInt(23, 101) * 100,
         depositpaid = Random.nextBoolean(),
             bookingdates = BookingDates(
-                checkin = checkin,
-                checkout = checkout
+                checkin = checkin.toString(),
+                checkout = checkout.toString()
             ),
         additionalneeds = LIST_ADDITIONALNEEDS.random(),
     )
